@@ -7,10 +7,31 @@ $("#drawCanvas").css('left', '0px');
 $("#drawCanvas").css('z-index', '1000000000');
 //$("#drawCanvas").css('pointer-events', 'none');
 
-$('#drawCanvas').on('mousedown', function() {
+
+var buttonDepressed = false;
+var lastX = 0;
+var lastY = 0;
+
+$('#drawCanvas').on('mousedown', function(e) {
+    buttonDepressed = true;
+    lastX = e.pageX;
+    lastY = e.pageY;
+});
+
+$('#drawCanvas').on('mouseup', function() {
+    buttonDepressed = false;
+});
+
+$('#drawCanvas').on('mousemove', function(e) {
+    if (!buttonDepressed)
+	return;
+
     var context = $("#drawCanvas")[0].getContext("2d");
-    context.moveTo(0, 0);
-    context.lineTo(100, 100);
+    context.moveTo(lastX, lastY);
+    context.lineTo(e.pageX, e.pageY);
     context.strokeStyle = "#e00";
     context.stroke();
-})
+
+    lastX = e.pageX;
+    lastY = e.pageY;
+});
