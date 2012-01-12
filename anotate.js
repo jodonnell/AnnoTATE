@@ -8,30 +8,47 @@ $("#drawCanvas").css('z-index', '1000000000');
 //$("#drawCanvas").css('pointer-events', 'none');
 
 
-var buttonDepressed = false;
-var lastX = 0;
-var lastY = 0;
 
-$('#drawCanvas').on('mousedown', function(e) {
-    buttonDepressed = true;
-    lastX = e.pageX;
-    lastY = e.pageY;
+var Draw = Class.extend({
+    init: function() {
+	this.buttonDepressed = false;
+	this.lastX = 0;
+	this.lastY = 0;
+
+	this.mouseDown();
+	this.mouseUp();
+	this.mouseMove();
+    },
+
+    mouseDown: function() {
+	$('#drawCanvas').on('mousedown', function(e) {
+	    this.buttonDepressed = true;
+	    this.lastX = e.pageX;
+	    this.lastY = e.pageY;
+	});
+    },
+
+    mouseUp: function() {
+	$('#drawCanvas').on('mouseup', function() {
+	    this.buttonDepressed = false;
+	});
+    },
+
+    mouseMove: function() {
+	$('#drawCanvas').on('mousemove', function(e) {
+	    if (!this.buttonDepressed)
+		return;
+
+	    var context = $("#drawCanvas")[0].getContext("2d");
+	    context.moveTo(this.lastX, this.lastY);
+	    context.lineTo(e.pageX, e.pageY);
+	    context.strokeStyle = "#e00";
+	    context.stroke();
+
+	    this.lastX = e.pageX;
+	    this.lastY = e.pageY;
+	});
+    }
 });
 
-$('#drawCanvas').on('mouseup', function() {
-    buttonDepressed = false;
-});
-
-$('#drawCanvas').on('mousemove', function(e) {
-    if (!buttonDepressed)
-	return;
-
-    var context = $("#drawCanvas")[0].getContext("2d");
-    context.moveTo(lastX, lastY);
-    context.lineTo(e.pageX, e.pageY);
-    context.strokeStyle = "#e00";
-    context.stroke();
-
-    lastX = e.pageX;
-    lastY = e.pageY;
-});
+var a = new Draw();
