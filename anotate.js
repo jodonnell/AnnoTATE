@@ -42,35 +42,50 @@ var Draw = Class.extend({
     },
 
     mouseDown: function() {
+	var me = this;
 	$('#drawCanvas').on('mousedown', function(e) {
-	    this.buttonDepressed = true;
-	    this.lastX = e.pageX;
-	    this.lastY = e.pageY;
+	    me.buttonDepressed = true;
+	    me.lastX = e.pageX;
+	    me.lastY = e.pageY;
 	});
     },
 
     mouseUp: function() {
+	var me = this;
 	$('#drawCanvas').on('mouseup', function() {
-	    this.buttonDepressed = false;
+	    me.buttonDepressed = false;
 	});
     },
 
     mouseMove: function() {
+	var me = this;
 	$('#drawCanvas').on('mousemove', function(e) {
-	    if (!this.buttonDepressed)
+	    if (!me.buttonDepressed)
 		return;
 
-	    var context = $("#drawCanvas")[0].getContext("2d");
-	    context.moveTo(this.lastX, this.lastY);
-	    context.lineTo(e.pageX, e.pageY);
-	    context.strokeStyle = "#e00";
-	    context.stroke();
+	    me.drawLine(e.pageX, e.pageY);
+	    me.save(e.pageX, e.pageY);
 
-	    this.history.push([[this.lastX, this.lastY], [e.pageX, e.pageY]])
-
-	    this.lastX = e.pageX;
-	    this.lastY = e.pageY;
+	    me.lastX = e.pageX;
+	    me.lastY = e.pageY;
 	});
+    },
+
+    drawLine: function(x, y) {
+	var context = $("#drawCanvas")[0].getContext("2d");
+	context.moveTo(this.lastX, this.lastY);
+	context.lineTo(x, y);
+	context.strokeStyle = "#e00";
+	context.stroke();
+    },
+
+    save: function(x, y) {
+	this.history.push([[this.lastX, this.lastY], [x, y]]);
+	localStorage.setItem('history', this.history);
+    },
+
+    load: function() {
+	this.history = localStorage.getItem('history');
     },
 
     keyDown: function() {
