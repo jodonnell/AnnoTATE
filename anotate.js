@@ -3,7 +3,7 @@ var Draw = Class.extend({
 	this.buttonDepressed = false;
 	this.lastX = 0;
 	this.lastY = 0;
-	this.history = [];
+	this.load();
 
 	this.createCanvas();
 	this.hideCanvas();
@@ -81,11 +81,11 @@ var Draw = Class.extend({
 
     save: function(x, y) {
 	this.history.push([[this.lastX, this.lastY], [x, y]]);
-	localStorage.setItem('history', this.history);
+	localStorage.setItem('history', JSON.stringify(this.history));
     },
 
     load: function() {
-	this.history = localStorage.getItem('history');
+	this.history = JSON.parse(localStorage.getItem('history')) || [];
     },
 
     keyDown: function() {
