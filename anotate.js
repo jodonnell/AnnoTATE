@@ -3,9 +3,9 @@ var Draw = Class.extend({
 	this.buttonDepressed = false;
 	this.lastX = 0;
 	this.lastY = 0;
-	this.load();
 
 	this.createCanvas();
+	this.load();
 	this.hideCanvas();
 
 	this.mouseDown();
@@ -17,7 +17,9 @@ var Draw = Class.extend({
     createCanvas: function() {
 	var width = $(document).width();
 	var height = $(document).height();
-	$('body').append('<canvas id="drawCanvas" width="' + width + '" height="' + height + '"></canvas>');
+
+	var canvas = '<canvas id="drawCanvas" width="' + width + '" height="' + height + '"></canvas>';
+	$('body').append(canvas);
 	$("#drawCanvas").css('position', 'absolute');
 	$("#drawCanvas").css('top', '0px');
 	$("#drawCanvas").css('left', '0px');
@@ -47,6 +49,7 @@ var Draw = Class.extend({
 	    me.buttonDepressed = true;
 	    me.lastX = e.pageX;
 	    me.lastY = e.pageY;
+	    this.save(e.pageX, e.pageY);
 	});
     },
 
@@ -80,12 +83,26 @@ var Draw = Class.extend({
     },
 
     save: function(x, y) {
-	this.history.push([[this.lastX, this.lastY], [x, y]]);
+	this.history.push([x, y]);
 	localStorage.setItem('history', JSON.stringify(this.history));
     },
 
     load: function() {
 	this.history = JSON.parse(localStorage.getItem('history')) || [];
+	for (var i = 0; i < this.history.length; i++) {
+	    var x = this.history[i][0];
+	    var y = this.history[i][1];
+
+	    if (i > 0) {
+		this.lastX = this.history[i - 1][0];
+		this.lastY = this.history[i - 1][1];
+	    }
+	    else {
+		this.lastX = x;
+		this.lastY = y;
+	    }
+	    this.drawLine(x, y);
+	}
     },
 
     keyDown: function() {
