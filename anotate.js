@@ -1,11 +1,12 @@
 var Draw = Class.extend({
     init: function() {
-	this.createCanvas();
-	this.hideCanvas();
-
 	this.buttonDepressed = false;
 	this.lastX = 0;
 	this.lastY = 0;
+	this.history = [];
+
+	this.createCanvas();
+	this.hideCanvas();
 
 	this.mouseDown();
 	this.mouseUp();
@@ -65,6 +66,8 @@ var Draw = Class.extend({
 	    context.strokeStyle = "#e00";
 	    context.stroke();
 
+	    this.history.push([[this.lastX, this.lastY], [e.pageX, e.pageY]])
+
 	    this.lastX = e.pageX;
 	    this.lastY = e.pageY;
 	});
@@ -80,5 +83,4 @@ var Draw = Class.extend({
 	});
     }
 });
-
 var a = new Draw();
