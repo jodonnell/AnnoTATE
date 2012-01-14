@@ -107,7 +107,15 @@ var Draw = Class.extend({
 	    if (code === 65 && e.altKey) { // alt-a
 		me.toggleCanvas();
 	    }
+	    if (code === 67 && e.altKey) { // alt-c
+		me.clearCanvas();
+	    }
+
 	});
+    },
+
+    clearCanvas: function() {
+	localStorage.removeItem('history');
     },
 
     mouseDown: function() {
