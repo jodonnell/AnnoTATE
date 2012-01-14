@@ -6,8 +6,8 @@ describe("Annotate", function() {
   });
 
   it("should be able to load some points", function() {
-      var points = [new Point(1, 1)];
-      line.load(points);
-      expect(line.points).toEqual(points);
+      localStorage.setItem('history', '1');
+      annotate.clearCanvas()
+      expect(localStorage.getItem('history')).toEqual(null);
   });
 });
