@@ -6,7 +6,7 @@
   "content_scripts": [
       {
 	  "matches": ["http://*/*", "https://*/*"],
-	  "js": ["jquery.js", "class.js", "anotate.js"]
+	  "js": ["jquery.js", "class.js", "point.js", "line.js", "anotate.js"]
       }
   ]
 }

@@ -43,66 +43,61 @@ var Draw = Class.extend({
 	    this.hideCanvas();
     },
 
-    mouseDown: function() {
-	var me = this;
-	$('#drawCanvas').on('mousedown', function(e) {
-	    me.buttonDepressed = true;
-	    me.lastX = e.pageX;
-	    me.lastY = e.pageY;
-	    this.save(e.pageX, e.pageY);
-	});
+    startDraw: function(startPoint) {
+	this.buttonDepressed = true;
+
+	this.lastPoint = startPoint;
+
+	this.line = new Line();
+	this.line.addPoint(startPoint);
     },
 
-    mouseUp: function() {
-	var me = this;
-	$('#drawCanvas').on('mouseup', function() {
-	    me.buttonDepressed = false;
-	});
+    stopDraw: function() {
+	this.buttonDepressed = false;
+	this.save();
     },
 
-    mouseMove: function() {
-	var me = this;
-	$('#drawCanvas').on('mousemove', function(e) {
-	    if (!me.buttonDepressed)
-		return;
+    drawing: function(point) {
+	if (!this.buttonDepressed)
+	    return;
 
-	    me.drawLine(e.pageX, e.pageY);
-	    me.save(e.pageX, e.pageY);
+	this.drawLine(point);
+	this.line.addPoint(point);
 
-	    me.lastX = e.pageX;
-	    me.lastY = e.pageY;
-	});
+	this.lastPoint = point;
     },
 
-    drawLine: function(x, y) {
+    drawLine: function(point) {
 	var context = $("#drawCanvas")[0].getContext("2d");
-	context.moveTo(this.lastX, this.lastY);
-	context.lineTo(x, y);
+	context.moveTo(this.lastPoint.x, this.lastPoint.y);
+	context.lineTo(point.x, point.y);
 	context.strokeStyle = "#e00";
 	context.stroke();
     },
 
-    save: function(x, y) {
-	this.history.push([x, y]);
+    save: function() {
+	this.history.push(this.line.explodePoints());
 	localStorage.setItem('history', JSON.stringify(this.history));
     },
 
     load: function() {
 	this.history = JSON.parse(localStorage.getItem('history')) || [];
-	for (var i = 0; i < this.history.length; i++) {
-	    var x = this.history[i][0];
-	    var y = this.history[i][1];
+	// for (var i = 0; i < this.history.length; i++) {
+	//     var x = this.history[i][0];
+	//     var y = this.history[i][1];
 
-	    if (i > 0) {
-		this.lastX = this.history[i - 1][0];
-		this.lastY = this.history[i - 1][1];
-	    }
-	    else {
-		this.lastX = x;
-		this.lastY = y;
-	    }
-	    this.drawLine(x, y);
-	}
+	//     if (i > 0) {
+	// 	this.lastX = this.history[i - 1][0];
+	// 	this.lastY = this.history[i - 1][1];
+	//     }
+	//     else {
+	// 	this.lastX = x;
+	// 	this.lastY = y;
+	//     }
+
+	//     if (!(this.lastX == -1 || x == -1))
+	// 	this.drawLine(x, y);
+	// }
     },
 
     keyDown: function() {
@@ -112,6 +107,27 @@ var Draw = Class.extend({
 	    if (code === 65 && e.altKey) { // alt-a
 		me.toggleCanvas();
 	    }
+	});
+    },
+
+    mouseDown: function() {
+	var me = this;
+	$('#drawCanvas').on('mousedown', function(e) {
+	    me.startDraw(new Point(e.pageX, e.pageY));
+	});
+    },
+
+    mouseUp: function() {
+	var me = this;
+	$('#drawCanvas').on('mouseup', function() {
+	    me.stopDraw();
+	});
+    },
+
+    mouseMove: function() {
+	var me = this;
+	$('#drawCanvas').on('mousemove', function(e) {
+	    me.drawing(new Point(e.pageX, e.pageY));
 	});
     }
 });
