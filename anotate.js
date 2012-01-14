@@ -1,4 +1,4 @@
-var Draw = Class.extend({
+var Annotate = Class.extend({
     init: function() {
 	this.buttonDepressed = false;
 	this.lastX = 0;
@@ -139,4 +139,4 @@ var Draw = Class.extend({
 	});
     }
 });
-var a = new Draw();
+var a = new Annotate();
