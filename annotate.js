@@ -60,11 +60,15 @@ var Annotate = Class.extend({
     },
 
     drawLine: function(point) {
-	var context = $("#drawCanvas")[0].getContext("2d");
+	var context = this.getContext();
 	context.moveTo(this.lastPoint.x, this.lastPoint.y);
 	context.lineTo(point.x, point.y);
 	context.strokeStyle = "#e00";
 	context.stroke();
+    },
+
+    getContext: function() {
+	return $("#drawCanvas")[0].getContext("2d");
     },
 
     save: function() {
@@ -74,22 +78,23 @@ var Annotate = Class.extend({
 
     load: function() {
 	this.history = this.getStorage();
-	// for (var i = 0; i < this.history.length; i++) {
-	//     var x = this.history[i][0];
-	//     var y = this.history[i][1];
 
-	//     if (i > 0) {
-	// 	this.lastX = this.history[i - 1][0];
-	// 	this.lastY = this.history[i - 1][1];
-	//     }
-	//     else {
-	// 	this.lastX = x;
-	// 	this.lastY = y;
-	//     }
+	var context = this.getContext();
+	for (var i = 0; i < this.history.length; i++) {
+	    var line = this.history[i];
+	    for (var j = 0; j < line.length; j++) {
+		var point = new Point(line[j][0], line[j][1]);
 
-	//     if (!(this.lastX == -1 || x == -1))
-	// 	this.drawLine(x, y);
-	// }
+		if (j == 0) {
+		    context.moveTo(point.x, point.y);
+		}
+		else {
+		    context.lineTo(point.x, point.y);
+		}
+		context.strokeStyle = "#e00";
+		context.stroke();
+	    }
+	}
     },
 
     getStorage: function() {
