@@ -10,4 +10,7 @@ describe("Point", function() {
 	expect(point.y).toEqual(10);
     });
 
+    it("should have be able to turn into an array", function() {
+	expect(point.toArray()).toEqual([5, 10]);
+    });
 });

@@ -11,6 +11,15 @@ describe("Annotate", function() {
 	expect(localStorage.getItem('history')).toEqual(null);
     });
 
+    it("should be able to draw", function() {
+	var startPoint = new Point(1, 1);
+	var endPoint = new Point(3, 3);
+	annotate.startDrawing(startPoint);
+	annotate.drawing(endPoint);
+	annotate.stopDrawing();
+
+	expect(annotate.getStorage()).toEqual([[startPoint.toArray(), endPoint.toArray()]]);
+    });
     
     
 });

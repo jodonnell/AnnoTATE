@@ -11,6 +11,12 @@ describe("Line", function() {
 	expect(line.points).toEqual(points);
     });
 
+    it("should be able to take a start point", function() {
+	var points = [new Point(1, 1)];
+	line = new Line(points[0]);
+	expect(line.points).toEqual(points);
+    });
+
     it("should be able to add points", function() {
 	var point = new Point(1, 1);
 	line.addPoint(point);

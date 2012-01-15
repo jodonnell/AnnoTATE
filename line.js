@@ -1,6 +1,8 @@
 var Line = Class.extend({
-    init: function() {
+    init: function(point) {
 	this.points = [];
+	if (point)
+	    this.addPoint(point);
     },
 
     load: function(points) {

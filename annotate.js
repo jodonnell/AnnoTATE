@@ -43,7 +43,7 @@ var Annotate = Class.extend({
 	    this.hideCanvas();
     },
 
-    startDraw: function(startPoint) {
+    startDrawing: function(startPoint) {
 	this.buttonDepressed = true;
 
 	this.lastPoint = startPoint;
@@ -52,7 +52,7 @@ var Annotate = Class.extend({
 	this.line.addPoint(startPoint);
     },
 
-    stopDraw: function() {
+    stopDrawing: function() {
 	this.buttonDepressed = false;
 	this.save();
     },
@@ -81,7 +81,7 @@ var Annotate = Class.extend({
     },
 
     load: function() {
-	this.history = JSON.parse(localStorage.getItem('history')) || [];
+	this.history = this.getStorage();
 	// for (var i = 0; i < this.history.length; i++) {
 	//     var x = this.history[i][0];
 	//     var y = this.history[i][1];
@@ -98,6 +98,10 @@ var Annotate = Class.extend({
 	//     if (!(this.lastX == -1 || x == -1))
 	// 	this.drawLine(x, y);
 	// }
+    },
+
+    getStorage: function() {
+	return JSON.parse(localStorage.getItem('history')) || [];
     },
 
     keyDown: function() {
@@ -121,14 +125,14 @@ var Annotate = Class.extend({
     mouseDown: function() {
 	var me = this;
 	$('#drawCanvas').on('mousedown', function(e) {
-	    me.startDraw(new Point(e.pageX, e.pageY));
+	    me.startDrawing(new Point(e.pageX, e.pageY));
 	});
     },
 
     mouseUp: function() {
 	var me = this;
 	$('#drawCanvas').on('mouseup', function() {
-	    me.stopDraw();
+	    me.stopDrawing();
 	});
     },
 
