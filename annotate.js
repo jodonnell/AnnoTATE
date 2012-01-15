@@ -44,23 +44,15 @@ var Annotate = Class.extend({
     },
 
     startDrawing: function(startPoint) {
-	this.buttonDepressed = true;
-
 	this.lastPoint = startPoint;
-
-	this.line = new Line();
-	this.line.addPoint(startPoint);
+	this.line = new Line(startPoint);
     },
 
     stopDrawing: function() {
-	this.buttonDepressed = false;
 	this.save();
     },
 
     drawing: function(point) {
-	if (!this.buttonDepressed)
-	    return;
-
 	this.drawLine(point);
 	this.line.addPoint(point);
 
@@ -125,6 +117,7 @@ var Annotate = Class.extend({
     mouseDown: function() {
 	var me = this;
 	$('#drawCanvas').on('mousedown', function(e) {
+	    me.buttonDepressed = true;
 	    me.startDrawing(new Point(e.pageX, e.pageY));
 	});
     },
@@ -132,6 +125,7 @@ var Annotate = Class.extend({
     mouseUp: function() {
 	var me = this;
 	$('#drawCanvas').on('mouseup', function() {
+	    me.buttonDepressed = false;
 	    me.stopDrawing();
 	});
     },
@@ -139,6 +133,8 @@ var Annotate = Class.extend({
     mouseMove: function() {
 	var me = this;
 	$('#drawCanvas').on('mousemove', function(e) {
+	    if (!me.buttonDepressed)
+		return;
 	    me.drawing(new Point(e.pageX, e.pageY));
 	});
     }
