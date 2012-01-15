@@ -1,8 +1,19 @@
 describe("Annotate", function() {
     var annotate;
 
+    var drawPoints = function(startPoint, points) {
+	annotate.startDrawing(startPoint);
+	for (var i = 0; i < points.length; i++)
+	    annotate.drawing(points[i]);
+	annotate.stopDrawing();
+    };
+
     beforeEach(function() {
 	annotate = new Annotate();
+    });
+
+    afterEach(function() {
+	annotate.clearCanvas();
     });
 
     it("should be able to clear the history", function() {
@@ -15,13 +26,9 @@ describe("Annotate", function() {
 	var startPoint = new Point(1, 1);
 	var midPoint = new Point(3, 3);
 	var endPoint = new Point(5, 4);
-	annotate.startDrawing(startPoint);
-	annotate.drawing(midPoint);
-	annotate.drawing(endPoint);
-	annotate.stopDrawing();
+	drawPoints(startPoint, [midPoint, endPoint]);
 
 	var lines = [[startPoint.toArray(), midPoint.toArray(), endPoint.toArray()]];
-
 	expect(annotate.getStorage()).toEqual(lines);
 	expect(annotate.history).toEqual(lines);
     });
@@ -31,17 +38,12 @@ describe("Annotate", function() {
 	var midPoint = new Point(3, 3);
 	var endPoint = new Point(5, 4);
 
-	annotate.startDrawing(startPoint);
-	annotate.drawing(midPoint);
-	annotate.drawing(endPoint);
-	annotate.stopDrawing();
+	drawPoints(startPoint, [midPoint, endPoint]);
 
 	var startPoint2 = new Point(3, 3);
 	var endPoint2 = new Point(4, 4);
 
-	annotate.startDrawing(startPoint2);
-	annotate.drawing(endPoint2);
-	annotate.stopDrawing();
+	drawPoints(startPoint2, [endPoint2]);
 
 	var lines = [[startPoint.toArray(), midPoint.toArray(), endPoint.toArray()],
 		   [startPoint2.toArray(), endPoint2.toArray()]];
@@ -49,5 +51,4 @@ describe("Annotate", function() {
 	expect(annotate.getStorage()).toEqual(lines);
 	expect(annotate.history).toEqual(lines);
     });
-
 });

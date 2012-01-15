@@ -15,8 +15,8 @@ var Line = Class.extend({
 
     explodePoints: function() {
 	var points = [];
-	for (var x = 0; x < this.points.length; x++) {
-	    points.push([this.points[x].x, this.points[x].y]);
+	for (var i = 0; i < this.points.length; i++) {
+	    points.push([this.points[i].x, this.points[i].y]);
 	}
 	return points;
     }
